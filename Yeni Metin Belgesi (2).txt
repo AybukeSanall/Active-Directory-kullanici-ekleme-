@@ -1,0 +1,18 @@
+Import-Module ActiveDirectory
+$filepath = Read-Host -Prompt "Lütfen Dosya yolunu giriniz"
+
+$users = Import-Csv $filepath
+
+$securePassword =ConvertTo-SecureString "Password123**" -AsPlainText -Force
+
+ForEach($user in $users){
+ $fname= $user.'First Name'
+ $lname=$user.'Last Name'
+ $emailaddress=$user.'EmailAddress'
+ $OUPath=$user.'Organizational Unit'
+
+ New-ADUser -Name "$fname $lname" -GivenName $fname -Surname $lname -UserPrincipalName "$fname $lname" -Path $OUPath -AccountPassword $securePassword -ChangePasswordAtLogon $True -Enabled $True -EmailAddress $emailaddress
+
+ echo $fname $lname $emailaddress $OUPath
+
+}
